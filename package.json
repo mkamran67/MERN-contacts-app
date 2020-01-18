@@ -1,0 +1,32 @@
+{
+  "name": "mern-contacts-app",
+  "version": "1.0.0",
+  "description": "Contacts storage application built with React, MongoDB and running on Express + NodeJS",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "server": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mkamran67/MERN-contacts-app.git"
+  },
+  "author": "MK",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mkamran67/MERN-contacts-app/issues"
+  },
+  "homepage": "https://github.com/mkamran67/MERN-contacts-app#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "config": "^3.2.4",
+    "express": "^4.17.1",
+    "express-validator": "^6.3.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.8.7"
+  },
+  "devDependencies": {
+    "concurrently": "^5.0.2",
+    "nodemon": "^2.0.2"
+  }
+}
