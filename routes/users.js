@@ -5,9 +5,11 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config');
+
 // @route   POST    api/users
-// @desc    Register a user
+// @desc    Register a user, validate login credentials, submit/save to DB, return token
 // @access  Public
+// Parameters -> ( route, For express-validator, promise)
 router.post(
   '/',
   [
@@ -28,14 +30,15 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    // getting the name , email, and password from body
+    // deconstructing the name , email, and password from body
     const { name, email, password } = req.body;
 
     try {
-      // findOne is a mongoose function to search data with the specific given in this is the unique email
+      // findOne is a mongoose function to search data with the specific field (any within their schema) in this is the unique email
+      // Checking if user email already exists
       let user = await User.findOne({ email });
 
-      // if it exists
+      // if user exists
       if (user) {
         return res.status(400).json({ msg: 'User already exists' });
       }
@@ -56,6 +59,7 @@ router.post(
       // We save the user to database
       await user.save();
 
+      // will contain an obj user with id within it
       const payload = {
         user: {
           id: user.id
@@ -63,7 +67,7 @@ router.post(
       };
 
       // payload is the user that'll be attached to this token for this is the current user
-      // jwtSecret is a
+      // jwtSecret is a string used for authentication when decrypting jwt tokens
       // expiresIn, simply expires at the end of that time.
       jwt.sign(
         payload,
@@ -73,7 +77,7 @@ router.post(
         },
         (err, token) => {
           if (err) throw err;
-          res.json({ token });
+          res.json({ token }); // return token
         }
       );
     } catch (error) {

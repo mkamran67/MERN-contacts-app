@@ -6,23 +6,28 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const auth = require('../middleware/auth');
-const mongoose = require('mongoose');
 
 // @route   GET    api/auth
 // @desc    Get logged in user
 // @access  Private
+
+// auth is passed in as a 2nd parameter, thus a protected route.
 router.get('/', auth, async (req, res) => {
   try {
+    // get user By ID minus the password
+    // since auth is the 2nd param and we're sending a valid token req obj will contain the user.id
+
     const user = await User.findById(req.user.id).select('-password');
+    // return user
     res.json(user);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('server error 111');
+    res.status(500).send('server error');
   }
 });
 
 // @route   POST    api/user
-// @desc    Auth user & get token
+// @desc    Authorize user and return a token (login)
 // @access  Public
 router.post(
   '/',
@@ -38,30 +43,35 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
+    // grab email and password from body (JSON data)
     const { email, password } = req.body;
 
     try {
+      // find the user by email
       let user = await User.findOne({ email });
 
       if (!user) {
         return res.status(400).json({ msg: 'invalid email' });
       }
 
+      // check if password matches with bcrypt for decrypting input taken is (string, and hash password)
       const isMatch = await bcrypt.compare(password, user.password);
 
       if (!isMatch) {
         return res.status(400).json({ msg: 'Invalid passowrd' });
       }
 
+      // if everything goes correctly assign payload to the User ID
       const payload = {
         user: {
           id: user.id
         }
       };
 
-      // payload is the user that'll be attached to this token for this is the current user
-      // jwtSecret is a
+      // payload is the user that'll be attached to this token
+      // jwtSecret is a global string, variable for decrypting and encrypting (hashing)
       // expiresIn, simply expires at the end of that time.
+      // To sign, add time , and return the token
       jwt.sign(
         payload,
         config.get('jwtSecret'),
@@ -70,7 +80,7 @@ router.post(
         },
         (err, token) => {
           if (err) throw err;
-          res.json({ token });
+          res.json({ token }); // return token
         }
       );
     } catch (error) {
