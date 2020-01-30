@@ -51,7 +51,7 @@ router.post(
       let user = await User.findOne({ email });
 
       if (!user) {
-        return res.status(400).json({ msg: 'invalid email' });
+        return res.status(400).json({ msg: 'Invalid email' });
       }
 
       // check if password matches with bcrypt for decrypting input taken is (string, and hash password)

@@ -38,7 +38,7 @@ router.post(
       // Checking if user email already exists
       let user = await User.findOne({ email });
 
-      // if user exists
+      // if user email already exists
       if (user) {
         return res.status(400).json({ msg: 'User already exists' });
       }
@@ -50,7 +50,7 @@ router.post(
         password
       });
 
-      // for encyrption of password, returns promise, but salt is the level of encyrption 10 is default
+      // for encyrption of password, returns promise, salt is the level of encyrption 10 is default
       const salt = await bcrypt.genSalt(10);
 
       // setting the password and encrypting with bcrypt we provide the string password and salt the multiplier
@@ -66,7 +66,7 @@ router.post(
         }
       };
 
-      // payload is the user that'll be attached to this token for this is the current user
+      // payload is the user.id that'll be attached to this token for this is the current user
       // jwtSecret is a string used for authentication when decrypting jwt tokens
       // expiresIn, simply expires at the end of that time.
       jwt.sign(

@@ -6,16 +6,32 @@ import {
   UPDATE_CONTACT,
   FILTER_CONTACTS,
   CLEAR_FILTER,
-  SET_ALERT,
-  REMOVE_ALERT
+  CONTACT_ERROR,
+  GET_CONTACTS,
+  CLEAR_CONTACTS
 } from '../types';
 
 export default (state, action) => {
   switch (action.type) {
+    case GET_CONTACTS: {
+      return {
+        ...state,
+        contacts: action.payload,
+        loading: false
+      };
+    }
+    case CONTACT_ERROR: {
+      return {
+        ...state,
+        error: action.payload,
+        loading: false
+      };
+    }
     case ADD_CONTACT: {
       return {
         ...state,
-        contacts: [...state.contacts, action.payload]
+        contacts: [...state.contacts, action.payload],
+        loading: false
       };
     }
     case DELETE_CONTACT: {
@@ -23,7 +39,17 @@ export default (state, action) => {
         ...state,
         contacts: state.contacts.filter(contact => {
           return contact.id !== action.payload;
-        })
+        }),
+        loading: false
+      };
+    }
+    case CLEAR_CONTACTS: {
+      return {
+        ...state,
+        contacts: null,
+        current: null,
+        filtered: null,
+        error: null
       };
     }
     case SET_CURRENT: {
@@ -35,13 +61,15 @@ export default (state, action) => {
     case CLEAR_CURRENT: {
       return {
         ...state,
-        current: null
+        current: null,
+        loading: false
       };
     }
     case CLEAR_FILTER: {
       return {
         ...state,
-        filtered: null
+        filtered: null,
+        loading: false
       };
     }
     case FILTER_CONTACTS: {
@@ -52,7 +80,8 @@ export default (state, action) => {
           const regex = new RegExp(`${action.payload}`, 'gi'); // global insensitive regex to match incoming text
 
           return contact.name.match(regex) || contact.email.match(regex); // return the contact with the matching name || email matches the incoming text
-        })
+        }),
+        loading: false
       };
     }
     case UPDATE_CONTACT: {
