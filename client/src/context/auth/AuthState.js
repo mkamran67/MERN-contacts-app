@@ -1,4 +1,4 @@
-import React, { useReducer, useContext } from 'react';
+import React, { useReducer } from 'react';
 import AuthContext from './AuthContext';
 import AuthReducer from './AuthReducer';
 import axios from 'axios';
@@ -23,7 +23,6 @@ const AuthState = props => {
     error: null
   };
 
-  const authContext = useContext(AuthContext);
   // reducer
   const [state, dispatch] = useReducer(AuthReducer, initialState);
 

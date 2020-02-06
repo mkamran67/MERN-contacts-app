@@ -1,5 +1,4 @@
 import React, { useReducer } from 'react';
-import uuid from 'uuid'; // to generate a random ID
 import ContactContext from './contactContext';
 import contactReducer from './contactReducer';
 import axios from 'axios';
@@ -57,8 +56,37 @@ const ContactState = props => {
   };
 
   // Delete Contact
-  const deleteContact = id => {
-    dispatch({ type: DELETE_CONTACT, payload: id });
+  const deleteContact = async id => {
+    try {
+      // not sending in token, since it's global with/in setAuthToken.js
+      await axios.delete(`/api/contacts/${id}`);
+
+      dispatch({ type: DELETE_CONTACT, payload: id });
+    } catch (err) {
+      dispatch({ type: CONTACT_ERROR, payload: err.response.msg });
+    }
+  };
+  // Update Contact CRUD
+  const updateContact = async contact => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    try {
+      // not sending in token, since it's global with/in setAuthToken.js
+      const res = await axios.put(
+        `/api/contacts/${contact._id}`,
+        contact,
+        config
+      );
+
+      dispatch({ type: UPDATE_CONTACT, payload: res.data });
+      clearCurrent();
+    } catch (err) {
+      dispatch({ type: CONTACT_ERROR, payload: err.response.msg });
+    }
   };
   // Set Current Contact
   const setCurrent = contact => {
@@ -68,11 +96,7 @@ const ContactState = props => {
   const clearCurrent = () => {
     dispatch({ type: CLEAR_CURRENT });
   };
-  // Update Contact CRUD
-  const updateContact = contact => {
-    dispatch({ type: UPDATE_CONTACT, payload: contact });
-    clearCurrent();
-  };
+
   // Filter Contacts
   const filterContacts = text => {
     dispatch({ type: FILTER_CONTACTS, payload: text });
