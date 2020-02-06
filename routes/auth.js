@@ -74,7 +74,9 @@ router.post(
       // To sign, add time , and return the token
       jwt.sign(
         payload,
-        config.get('jwtSecret'),
+        process.env.NODE_ENV === 'production'
+          ? process.env.jwtSecret
+          : config.get('jwtSecret'),
         {
           expiresIn: 360000
         },

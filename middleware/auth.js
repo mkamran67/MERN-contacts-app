@@ -12,7 +12,11 @@ module.exports = function(req, res, next) {
 
   try {
     // verifying token
-    const decoded = jwt.verify(token, config.get('jwtSecret'));
+    if (process.env.NODE_ENV === 'production') {
+      const decoded = jwt.verify(token, process.env.jwtSecret);
+    } else {
+      const decoded = jwt.verify(token, config.get('jwtSecret'));
+    }
 
     // getting the user from the payload
     req.user = decoded.user;

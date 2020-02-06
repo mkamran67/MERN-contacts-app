@@ -5,11 +5,23 @@ const db = config.get('mongoURI'); // grabs the global variable mongoURI
 // for conencting to mongoDB (database)
 const connectDB = async () => {
   try {
-    await mongoose.connect(db, {
-      useNewUrlParser: true,
-      useCreateIndex: true,
-      useUnifiedTopology: true
-    });
+    // if in production do this else
+    if (process.env.NODE_ENV === 'production') {
+      await mongoose.connect(process.env.mongoURI, {
+        useNewUrlParser: true,
+        useCreateIndex: true,
+        useUnifiedTopology: true
+      });
+    } else {
+      console.log(`Development mode...`);
+
+      await mongoose.connect(db, {
+        useNewUrlParser: true,
+        useCreateIndex: true,
+        useUnifiedTopology: true
+      });
+    }
+
     console.log(`MongoDB Connected...`);
   } catch (error) {
     console.log(error.message);
