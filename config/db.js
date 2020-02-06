@@ -7,6 +7,8 @@ const connectDB = async () => {
   try {
     // if in production do this else
     if (process.env.NODE_ENV === 'production') {
+      console.log(`Starting in production mode...`);
+
       await mongoose.connect(process.env.mongoURI, {
         useNewUrlParser: true,
         useCreateIndex: true,
@@ -14,6 +16,7 @@ const connectDB = async () => {
       });
     } else {
       console.log(`Development mode...`);
+      console.log(process.env.NODE_ENV);
 
       await mongoose.connect(db, {
         useNewUrlParser: true,

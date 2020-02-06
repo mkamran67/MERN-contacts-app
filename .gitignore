@@ -1,6 +1,5 @@
 node_modules/
-default.json
-production.json
+
 
 /client/node_modules
 /client/build
