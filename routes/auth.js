@@ -18,10 +18,10 @@ router.get('/', auth, async (req, res) => {
     // since auth is the 2nd param and we're sending a valid token req obj will contain the user.id
 
     const user = await User.findById(req.user.id).select('-password');
+
     // return user
     res.json(user);
   } catch (err) {
-    console.error(err.message);
     res.status(500).send('server error');
   }
 });
@@ -58,6 +58,8 @@ router.post(
       const isMatch = await bcrypt.compare(password, user.password);
 
       if (!isMatch) {
+        console.log(`Match failed`);
+
         return res.status(400).json({ msg: 'Invalid passowrd' });
       }
 

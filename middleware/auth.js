@@ -11,16 +11,15 @@ module.exports = function(req, res, next) {
   }
 
   try {
+    let decoded = null;
     // verifying token
     if (process.env.NODE_ENV === 'production') {
-      const decoded = jwt.verify(token, process.env.jwtSecret);
+      decoded = jwt.verify(token, process.env.jwtSecret);
     } else {
-      const decoded = jwt.verify(token, config.get('jwtSecret'));
+      decoded = jwt.verify(token, config.get('jwtSecret'));
     }
 
-    // getting the user from the payload
     req.user = decoded.user;
-
     // moving on (middleware function)
     next();
   } catch (err) {

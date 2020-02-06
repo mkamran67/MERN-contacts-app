@@ -73,6 +73,7 @@ const AuthState = props => {
       });
     }
   };
+
   // Login User, log the user in and get the token
   const loginUser = async formData => {
     // config is for axios headers being passed to the server
@@ -91,8 +92,6 @@ const AuthState = props => {
         type: LOGIN_SUCCESS,
         payload: res.data
       });
-
-      loadUser();
     } catch (err) {
       dispatch({
         type: LOGIN_FAIL,
@@ -100,8 +99,10 @@ const AuthState = props => {
       });
     }
   };
+
   // Log out, remove data and destroy the token
   const logoutUser = () => dispatch({ type: LOGOUT });
+
   // Clear Errors
   const clearErrors = () =>
     dispatch({

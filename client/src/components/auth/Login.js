@@ -38,7 +38,7 @@ const Login = props => {
     if (email === '' || password === '') {
       setAlert('All Fields must be filled', 'danger');
     } else {
-      // call method for registeration
+      // call method for login
       loginUser({
         email,
         password

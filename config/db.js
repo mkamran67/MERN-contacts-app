@@ -16,7 +16,6 @@ const connectDB = async () => {
       });
     } else {
       console.log(`Development mode...`);
-      console.log(process.env.NODE_ENV);
 
       await mongoose.connect(db, {
         useNewUrlParser: true,
